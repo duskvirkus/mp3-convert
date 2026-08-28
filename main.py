@@ -25,13 +25,19 @@ for src in sorted(SRC.rglob("*")):
     is_image = src.suffix.lower() in IMAGE_EXTS
     dst = DST / rel if is_image else DST / rel.with_suffix(".mp3")
 
-    if dst.exists() and dst.stat().st_mtime > src.stat().st_mtime:
-        skipped += 1
-        continue
+    is_copy = is_image or src.suffix.lower() == ".mp3"
+
+    if dst.exists():
+        if is_copy and dst.stat().st_size == src.stat().st_size:
+            skipped += 1
+            continue
+        elif not is_copy and dst.stat().st_mtime > src.stat().st_mtime:
+            skipped += 1
+            continue
 
     dst.parent.mkdir(parents=True, exist_ok=True)
 
-    if is_image or src.suffix.lower() == ".mp3":
+    if is_copy:
         shutil.copy2(src, dst)
         print(f"copied:    {rel}")
         converted += 1
