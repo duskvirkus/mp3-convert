@@ -1,9 +1,14 @@
+import os
 import shutil
 import subprocess
 from pathlib import Path
 
-SRC = Path("/home/dusk/Music/library3/contents")
-DST = Path("/home/dusk/Music/library3/contents-mp3")
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SRC = Path(os.environ["SRC"])
+DST = Path(os.environ["DST"])
 
 AUDIO_EXTS = {".mp3", ".flac", ".m4a"}
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".gif"}
